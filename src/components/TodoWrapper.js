@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Todo } from './Todo'
 import { TodoForm } from './TodoForm'
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +7,23 @@ uuidv4();
 
 export const TodoWrapper = () => {
   const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (storedTodos) {
+      setTodos(storedTodos);
+    } else {
+      setTodos([
+        { id: uuidv4(), task: "Programming exam 16:00", completed: false, isEditing: false },
+        { id: uuidv4(), task: "Go to the gym 20:00", completed: false, isEditing: false }
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
 
   const addTodo = todo => {
     setTodos([...todos, {id: uuidv4(), task: todo, completed: false, isEditing: false}])
